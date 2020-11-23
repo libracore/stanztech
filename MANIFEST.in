@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include stanztech *.css
+recursive-include stanztech *.csv
+recursive-include stanztech *.html
+recursive-include stanztech *.ico
+recursive-include stanztech *.js
+recursive-include stanztech *.json
+recursive-include stanztech *.md
+recursive-include stanztech *.png
+recursive-include stanztech *.py
+recursive-include stanztech *.svg
+recursive-include stanztech *.txt
+recursive-exclude stanztech *.pyc
