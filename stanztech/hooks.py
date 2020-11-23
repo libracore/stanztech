@@ -127,3 +127,7 @@ app_license = "AGPL"
 # 	"Task": "stanztech.task.get_dashboard_data"
 # }
 
+# hook for migrate cleanup tasks
+after_migrate = [
+    'stanztech.stanztech.updater.cleanup_languages'
+]
