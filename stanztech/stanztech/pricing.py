@@ -3,6 +3,7 @@
 
 import frappe
 from frappe import _
+from ast import literal_eval
 
 """ This function will add a pricing rule """
 @frappe.whitelist()
@@ -53,3 +54,32 @@ def sort_priorities(item):
             priority += 1
     frappe.db.commit()
     return
+
+""" This function fetches former prices used in sales orders """
+@frappe.whitelist()
+def fetch_former_prices(customer, items):
+    if type(items) == str:
+        items = literal_eval(items)
+    former_prices = []
+    for item in items:
+        # check if item has been ordered before
+        sql_query = """SELECT 
+                         `tabSales Order Item`.`item_code` AS `item_code`, 
+                         `tabSales Order Item`.`rate` AS `rate`, 
+                         `tabSales Order Item`.`qty` AS `qty`,
+                         `tabSales Order`.`transaction_date` AS `date`
+                       FROM `tabSales Order Item` 
+                       LEFT JOIN `tabSales Order` ON `tabSales Order`.`name` = `tabSales Order Item`.`parent`
+                       WHERE `tabSales Order`.`docstatus` = 1
+                         AND `tabSales Order Item`.`item_code` = '{item}'
+                       ORDER BY `tabSales Order`.`transaction_date` DESC
+                       LIMIT 1;""".format(item=item)
+        former_info = frappe.db.sql(sql_query, as_dict=True)
+        if len(former_info) > 0:
+            former_prices.append({
+                'item_code': item,
+                'qty': former_info[0]['qty'],
+                'rate': former_info[0]['rate'],
+                'date': former_info[0]['date']
+            })
+    return former_prices
