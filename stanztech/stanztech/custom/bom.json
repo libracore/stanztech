@@ -107,6 +107,30 @@
  ],
  "custom_perms": [],
  "doctype": "BOM",
- "property_setters": [],
+ "property_setters": [
+  {
+   "_assign": null,
+   "_comments": null,
+   "_liked_by": null,
+   "_user_tags": null,
+   "creation": "2020-12-10 17:04:06.724804",
+   "default_value": null,
+   "doc_type": "BOM",
+   "docstatus": 0,
+   "doctype_or_field": "DocField",
+   "field_name": "with_operations",
+   "idx": 0,
+   "modified": "2020-12-10 17:04:06.724804",
+   "modified_by": "Administrator",
+   "name": "BOM-with_operations-hidden",
+   "owner": "Administrator",
+   "parent": null,
+   "parentfield": null,
+   "parenttype": null,
+   "property": "hidden",
+   "property_type": "Check",
+   "value": "1"
+  }
+ ],
  "sync_on_migrate": 1
 }
