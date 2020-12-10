@@ -1,1 +1,5 @@
 DocType: UOM,Set,Set
+DocType: Production Step,Production Step,Produktionsschritt
+DocType: Production Step,Production Steps,Produktionsschritte
+DocType: Production Step,Production Step Type,Produktionsschrittart
+Page: Production Control,Production Control,Fertigungszentrale

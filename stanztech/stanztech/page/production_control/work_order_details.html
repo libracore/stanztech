@@ -1,0 +1,25 @@
+<table class="table">
+  <thead class="thead-light">
+    <tr>
+        <th scope="col">{{ __("Work Order") }}</th>
+        <th scope="col">{{ __("Item") }}</th>
+        <th scope="col">{{ __("Qty") }}</th>
+        <th scope="col">{{ __("Status") }}</th>
+        <th scope="col">{{ __("Steps") }}</th>
+        <th scope="col">{{ __("Action") }}</th>
+    </tr>
+  </thead>
+    <tr>
+        <td><a href="/desk#Form/Work Order/{{ name }}">{{ name }}</a></td>
+        <td><a href="/desk#Form/Item/{{ production_item }}">{{ production_item }}</a></td>
+        <td>{{ qty }}</td>
+        <td>{{ __(status) }}</td>
+        <td>
+        {% for s in production_steps %}
+            {{ s.production_step_type }}
+        {% endfor %}
+        </td>
+    </tr> 
+
+</table>
+

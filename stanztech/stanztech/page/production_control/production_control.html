@@ -1,0 +1,24 @@
+<div style="margin: 5px; margin-top: 0px; border-top: 1px solid white; ">
+    <div class="row">
+        <div class="form-column col-sm-6">
+            <p class="text-muted">{%= __("Scan Work Order Barcode") %}</p>
+            <div class="input-group">
+                <span class="input-group-addon"><i class="fa fa-codepen"></i></span>
+                <input onfocus="clear_qr();" type="text" id="work_order" name="work_order" class="form-control" placeholder="QR-Code"  >
+            </div>
+        </div>
+    </div>
+  
+    
+    <div class="row">
+        <div class="form-column col-sm-6">
+          <p>{{ __("Controls") }}</p>
+          
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-column col-sm-12" id="work_order_view"></div>
+    </div>
+    
+</div>
