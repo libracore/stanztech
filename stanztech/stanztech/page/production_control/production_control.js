@@ -20,35 +20,8 @@ frappe.production_control = {
         me.body = $('<div></div>').appendTo(me.page.main);
         var data = "";
         $(frappe.render_template('production_control', data)).appendTo(me.body);
-        
-        /* // attach button handlers
-        this.page.main.find(".btn-create-file").on('click', function() {
-            frappe.abacus_export.create_transfer_file();
-        });
-        
-        // add menu button
-        this.page.add_menu_item(__("Reset export flags"), function() {
-            frappe.abacus_export.reset_export_flags();
-        }); */
-
     },
-    run: function() {
-        /* // set beginning of the year as start and today as current date
-        var today = new Date();
-        var dd = today.getDate();
-        if (dd < 10) { dd = "0" + dd; }
-        var mm = today.getMonth() + 1;     //January is 0!
-        if (mm < 10) { mm = "0" + mm; }
-        var yyyy = today.getFullYear();
-        var input_start = document.getElementById("start_date");
-        input_start.value = yyyy + "-01-01";
-        var input_end = document.getElementById("end_date");
-        input_end.value = yyyy + "-" + mm + "-" + dd;
-        
-        // attach change handlers
-        input_start.onchange = function() { frappe.abacus_export.update_preview(); };
-        input_end.onchange = function() { frappe.abacus_export.update_preview(); }; */
-        
+    run: function() {       
         // add on enter listener to QR code box
         document.getElementById("work_order").addEventListener("keyup", function(event) {
             event.preventDefault();
@@ -63,7 +36,6 @@ frappe.production_control = {
             args: {'work_order': work_order },
             callback: function(r) {
                 var wo = r.message;
-                console.log(wo);
                 frappe.production_control.display_work_order(wo);
             }
         });
@@ -71,6 +43,103 @@ frappe.production_control = {
     display_work_order: function (work_order) {
         var html = frappe.render_template('work_order_details', work_order)
         document.getElementById("work_order_view").innerHTML = html;
+        // attach button handlers
+        var btn_finish = document.getElementById("btn_finish");
+        if (['Not Started', 'In Process'].indexOf(work_order.status) >= 0) {
+            btn_finish.style.visibility = "visible";
+        }
+        btn_finish.onclick = function() {
+            frappe.call({
+                method: 'erpnext.manufacturing.doctype.work_order.work_order.make_stock_entry',
+                args: {
+                    'work_order_id': work_order.name,
+                    'purpose': "Manufacture",
+                    'qty': work_order.qty
+                },
+                callback: function(r) {
+                    var stock_entry = r.message;
+                    frappe.model.sync(stock_entry);
+                    frappe.set_route('Form', stock_entry.doctype, stock_entry.name);
+                }
+            });
+        };
+        // go through steps
+        var is_started = false;
+        var is_completed = false;
+        var cdn = null;
+        for (var s = (work_order.production_steps.length - 1); s >= 0; s--) {
+            is_completed = false;
+            is_started = false;
+            cdn = null;
+            // go through logs
+            for (var l = (work_order.production_log.length - 1); l >= 0; l--) {
+                if (work_order.production_log[l].production_step_type === work_order.production_steps[s].production_step_type) {
+                    if (work_order.production_log[l].completed === 1) {
+                        document.getElementById("tick_complete_" + work_order.production_steps[s].name).style.visibility = "visible";
+                        is_completed = true;
+                        break;
+                    }
+                    if (work_order.production_log[l].end) {
+                        is_started = false;
+                        break;
+                    } else if (work_order.production_log[l].start) {
+                        is_started = true;
+                        cdn = work_order.production_log[l].name;
+                        break;
+                    }
+                }
+            }
+            if (is_started) {
+                var btn_stop = document.getElementById("btn_stop_" + work_order.production_steps[s].name);
+                btn_stop.style.visibility = "visible";
+                btn_stop.onclick = frappe.production_control.stop_log.bind(this, work_order.name, cdn)
+
+                var btn_complete = document.getElementById("btn_complete_" + work_order.production_steps[s].name);
+                btn_complete.style.visibility = "visible";
+                btn_complete.onclick = frappe.production_control.complete_log.bind(this, work_order.name, cdn);
+
+            } else if (!is_completed) {
+                var btn_start = document.getElementById("btn_start_" + work_order.production_steps[s].name);
+                btn_start.style.visibility = "visible";
+                btn_start.onclick = frappe.production_control.start_log.bind(this, work_order.name, work_order.production_steps[s].production_step_type);
+            }
+        }
+    },
+    start_log: function (work_order, production_step_type) {
+        frappe.call({
+            method: 'stanztech.stanztech.page.production_control.production_control.start_log',
+            args: {
+                'work_order': work_order,
+                'production_step_type': production_step_type
+            },
+            callback: function(r) {
+                frappe.production_control.get_work_order(work_order);
+            }
+        });
+    },
+    complete_log: function (work_order, cdn) {
+        frappe.call({
+            method: 'stanztech.stanztech.page.production_control.production_control.complete_log',
+            args: {
+                'work_order': work_order,
+                'cdn': cdn
+            },
+            callback: function(r) {
+                frappe.production_control.get_work_order(work_order);
+            }
+        });
+    },
+    stop_log: function (work_order, cdn) {
+        frappe.call({
+            method: 'stanztech.stanztech.page.production_control.production_control.end_log',
+            args: {
+                'work_order': work_order,
+                'cdn': cdn
+            },
+            callback: function(r) {
+                frappe.production_control.get_work_order(work_order);
+            }
+        });
     }
 }
 

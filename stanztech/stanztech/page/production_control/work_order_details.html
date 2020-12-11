@@ -16,8 +16,16 @@
         <td>{{ __(status) }}</td>
         <td>
         {% for s in production_steps %}
-            {{ s.production_step_type }}
+            <p style="padding: 5px; ">{{ s.production_step_type }} 
+            <i class="glyphicon glyphicon-ok" style="visibility: hidden; " id="tick_complete_{{ s.name }}"></i>
+            <button type="submit" class="btn btn-sm btn-warning btn-parse-file" id="btn_start_{{ s.name }}" style="visibility: hidden; ">{{ __("Start") }}</button>
+            <button type="submit" class="btn btn-sm btn-danger btn-parse-file" id="btn_stop_{{ s.name }}" style="visibility: hidden; ">{{ __("Pause") }}</button>
+            <button type="submit" class="btn btn-sm btn-success btn-parse-file" id="btn_complete_{{ s.name }}" style="visibility: hidden; ">{{ __("Completed") }}</button>
+            </p>
         {% endfor %}
+        </td>
+        <td>
+            <button type="submit" class="btn btn-sm btn-primary btn-parse-file" id="btn_finish" style="visibility: hidden; ">{{ __("Finish") }}</button>
         </td>
     </tr> 
 
