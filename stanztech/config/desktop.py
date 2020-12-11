@@ -7,7 +7,7 @@ def get_data():
 		{
 			"module_name": "Stanztech",
 			"color": "#0b4ea2",
-			"icon": "octicon octicon-cpu",
+			"icon": "icon cube-blue",
 			"type": "module",
 			"label": _("Stanztech")
 		}
