@@ -3,3 +3,4 @@ DocType: Production Step,Production Step,Produktionsschritt
 DocType: Production Step,Production Steps,Produktionsschritte
 DocType: Production Step,Production Step Type,Produktionsschrittart
 Page: Production Control,Production Control,Fertigungszentrale
+Page: Production Control,Scan Work Order QR-Code,QR-Code scannen

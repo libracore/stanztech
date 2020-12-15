@@ -1,7 +1,7 @@
 frappe.pages['production_control'].on_page_load = function(wrapper) {
     var page = frappe.ui.make_app_page({
         parent: wrapper,
-        title: 'Production Control',
+        title: __('Production Control'),
         single_column: true
     });
     
@@ -103,6 +103,9 @@ frappe.production_control = {
                 btn_start.style.visibility = "visible";
                 btn_start.onclick = frappe.production_control.start_log.bind(this, work_order.name, work_order.production_steps[s].production_step_type);
             }
+            var btn_remark = document.getElementById("btn_remark");
+            btn_remark.onclick = frappe.production_control.remark.bind(this, work_order.name);
+
         }
     },
     start_log: function (work_order, production_step_type) {
