@@ -4,7 +4,7 @@ frappe.pages['production_control'].on_page_load = function(wrapper) {
         title: __('Production Control'),
         single_column: true
     });
-    
+    console.log(wrapper);
     frappe.production_control.make(page);
     frappe.production_control.run();
     
@@ -26,9 +26,24 @@ frappe.production_control = {
         document.getElementById("work_order").addEventListener("keyup", function(event) {
             event.preventDefault();
             if (event.keyCode === 13) {
-                frappe.production_control.get_work_order(this.value);
+                if (this.value.startsWith("MA-")) {
+                    // this is an employee key
+                    var employee = document.getElementById("employee");
+                    employee.value = this.value;
+                    this.value = "";
+                } else {
+                    // open work order
+                    frappe.production_control.get_work_order(this.value);
+                }
             }
         });
+        // check for url parameters
+        var url = location.href;
+        if (url.indexOf("?work_order=") >= 0) {
+            var work_order = url.split('=')[1].split('&')[0];
+            document.getElementById("work_order").value = work_order;
+            frappe.production_control.get_work_order(work_order);
+        }
     },
     get_work_order: function (work_order) {
         frappe.call({
@@ -109,11 +124,13 @@ frappe.production_control = {
         }
     },
     start_log: function (work_order, production_step_type) {
+        var employee = document.getElementById("employee").value;
         frappe.call({
             method: 'stanztech.stanztech.page.production_control.production_control.start_log',
             args: {
                 'work_order': work_order,
-                'production_step_type': production_step_type
+                'production_step_type': production_step_type,
+                'employee': employee
             },
             callback: function(r) {
                 frappe.production_control.get_work_order(work_order);
@@ -143,6 +160,26 @@ frappe.production_control = {
                 frappe.production_control.get_work_order(work_order);
             }
         });
+    },
+    remark: function (work_order) {
+        frappe.prompt([
+            {'fieldname': 'remark', 'fieldtype': 'Data', 'label': __('Remark'), 'reqd': 1}  
+        ],
+        function(values){
+            frappe.call({
+                method: 'stanztech.stanztech.page.production_control.production_control.remark',
+                args: {
+                    'work_order': work_order,
+                    'remark': values.remark
+                },
+                callback: function(r) {
+                    frappe.show_alert( __("Updated") );
+                }
+            });
+        },
+        __('Add remark'),
+        'OK'
+        );
     }
 }
 

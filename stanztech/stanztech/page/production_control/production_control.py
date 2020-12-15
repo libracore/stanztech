@@ -40,12 +40,22 @@ def complete_log(work_order, cdn):
     return
 
 @frappe.whitelist()
-def start_log(work_order, production_step_type):
+def start_log(work_order, production_step_type, employee=None):
     wo = frappe.get_doc("Work Order", work_order)
     row = wo.append('production_log', {
         'production_step_type': production_step_type,
-        'start': datetime.now()
+        'start': datetime.now(),
+        'employee': employee
     })
     wo.save()
     return
     
+@frappe.whitelist()
+def remark(work_order, remark):
+    wo = frappe.get_doc("Work Order", work_order)
+    if wo.remarks:
+        wo.remarks += "<br>" + remark
+    else:
+        wo.remarks = remark
+    wo.save()
+    return
