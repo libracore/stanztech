@@ -93,6 +93,12 @@ def get_data():
                    },
                    {
                        "type": "doctype",
+                       "name": "Supplier Quotation",
+                       "label": _("Supplier Quotation"),
+                       "description": _("Supplier Quotation")                   
+                   },
+                   {
+                       "type": "doctype",
                        "name": "Purchase Order",
                        "label": _("Purchase Order"),
                        "description": _("Purchase Order")                   
@@ -137,6 +143,27 @@ def get_data():
                         "type": "report",
                         "name": "General Ledger",
                         "label": _("General Ledger"),
+                        "doctype": "GL Entry",
+                        "is_query_report": True
+                    },
+                    {
+                        "type": "report",
+                        "name": "Profit and Loss Statement",
+                        "label": _("Profit and Loss Statement"),
+                        "doctype": "GL Entry",
+                        "is_query_report": True
+                    },
+                    {
+                        "type": "report",
+                        "name": "Balance Sheet",
+                        "label": _("Balance Sheet"),
+                        "doctype": "GL Entry",
+                        "is_query_report": True
+                    },
+                    {
+                        "type": "report",
+                        "name": "DATEV",
+                        "label": _("DATEV"),
                         "doctype": "GL Entry",
                         "is_query_report": True
                     }
