@@ -8,3 +8,6 @@ Page: Production Control,Remark,Anmerkung
 Page: Production Control,Add remark,Anmerkung hinzufügen
 Page: Production Control,Updated,Aktualisiert
 DocType: Sales Invoice,Return,Gutschrift
+DocType: Stanztech Settings,Stanztech Settings,Stanztech-Einstellungen
+DocType: Stanztech Settings,Label Printer,Etikettendrucker
+DocType: Stanztech Settings,Please define a label printer under Stanztech Settings.,Bitte wählen Sie einen Etikettendrucker in den Stanztech-Einstellungen

@@ -24,6 +24,12 @@ def get_data():
                        "name": "Production Step Type",
                        "label": _("Production Step Type"),
                        "description": _("Production Step Type")
+                   },
+                   {
+                       "type": "doctype",
+                       "name": "Stanztech Settings",
+                       "label": _("Stanztech Settings"),
+                       "description": _("Stanztech Settings")
                    }
             ]
         },

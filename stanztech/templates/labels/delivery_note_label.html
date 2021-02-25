@@ -1,0 +1,19 @@
+{% set vars = {'counter': 0} %}
+{% for d in details %}<!-- per delivery note -->
+  {% for i in d['items'] %}<!-- per item position -->
+
+{% if vars.update({'counter': vars.counter + 1}) %}{% endif %}
+<table style="width: 57mm; height: 27mm; {% if vars.counter < (detail_count) %}page-break-after: always;{% endif %} font-size: 12px; ">
+    <tr>
+        <td style="margin-top: 0px; font-site: 8px; ">
+        {{ _("Delivery Note") }}: {{ d.name }}<br>
+        {{ i.item_code }}<br>
+        {{ i.item_name }}<br>
+        {{ i.qty }} {{ i.uom }}
+        </td>
+    </tr>
+</table>
+
+
+  {% endfor %}
+{% endfor %}

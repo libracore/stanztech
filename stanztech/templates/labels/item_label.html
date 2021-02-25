@@ -1,0 +1,19 @@
+{% for i in range(0, items|len) %}
+<table style="margin: 0px !important; padding: 0px !important; width: 57mm; height: 27mm; {% if i < (items|len - 1) %}page-break-after: always;{% endif %} ">
+    <tbody>
+        <tr style="height: 27mm !important; margin: 0px !important; padding: 0px !important;">
+            <td style="width: 40mm !important; margin: 0px !important; padding: 0px !important;">
+                <p style="font-size: 8px !important; margin: 0px !important; padding: 0px !important;">
+                    {{ items[i].item_code }}<br>
+                    {{ items[i].item_name }}<br>
+                    Kunde: {{ items[i].customer_name or "-" }}<br>
+                    Lagereinheit: {{ items[i].stock_uom }}
+                </p>
+            </td>
+            <td style="width: 15mm !important; margin: 0px !important; padding: 0px !important;">
+                <img src="https://data.libracore.ch/phpqrcode/api/qrcode.php?content={{ items[i].item_code }}&ecc=H&size=6&frame=2" style="height: 15mm !important; width: 15mm !important; margin: 0px !important; padding: 0px !important;" />
+            </td>
+        </tr>
+    </tbody>
+</table>
+{% endfor %}
