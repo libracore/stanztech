@@ -120,7 +120,15 @@ def get_data():
                        "name": "Purchase Invoice",
                        "label": _("Purchase Invoice"),
                        "description": _("Purchase Invoice")                   
-                   }                   
+                   },
+                   {
+                       "type": "report",
+                       "doctype": "Bin",
+                       "name": "Engpassmenge",
+                       "label": _("Engpassmenge"),
+                       "description": _("Engpassmenge"),
+                       "is_query_report": True
+                   }               
             ]
         },
         {
