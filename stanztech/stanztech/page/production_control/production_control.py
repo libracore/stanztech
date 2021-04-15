@@ -18,25 +18,24 @@ def get_work_order(work_order):
     return wo
 
 @frappe.whitelist()
-def end_log(work_order, cdn):
+def end_log(work_order, cdn, employee, completed=0):
     wo = frappe.get_doc("Work Order", work_order)
+    total_duration = 0
     for log in wo.production_log:
         frappe.log_error("{0} == {1}".format(log.name, cdn))
         if log.name == cdn:
             log.end = datetime.now()
+            log.completed = completed
+            log.duration = float((log.end - log.start).total_seconds() / 3600)
             break
+        total_duration += log.duration
+    wo.total_time = total_duration
     wo.save()
     return
 
 @frappe.whitelist()
-def complete_log(work_order, cdn):
-    wo = frappe.get_doc("Work Order", work_order)
-    for log in wo.production_log:
-        if log.name == cdn:
-            log.completed = 1
-            log.end = datetime.now()
-            break
-    wo.save()
+def complete_log(work_order, cdn, employee):
+    end_log(work_order, cdn, employee, completed=1)
     return
 
 @frappe.whitelist()

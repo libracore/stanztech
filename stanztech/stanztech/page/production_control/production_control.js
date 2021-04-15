@@ -82,49 +82,53 @@ frappe.production_control = {
         var is_started = false;
         var is_completed = false;
         var cdn = null;
+        var employee = document.getElementById("employee").value;
         for (var s = (work_order.production_steps.length - 1); s >= 0; s--) {
             is_completed = false;
             is_started = false;
             cdn = null;
-            // go through logs
+            // go through logs backwards
             for (var l = (work_order.production_log.length - 1); l >= 0; l--) {
                 if (work_order.production_log[l].production_step_type === work_order.production_steps[s].production_step_type) {
-                    if (work_order.production_log[l].completed === 1) {
-                        document.getElementById("tick_complete_" + work_order.production_steps[s].name).style.visibility = "visible";
-                        is_completed = true;
-                        break;
-                    }
-                    if (work_order.production_log[l].end) {
-                        is_started = false;
-                        break;
-                    } else if (work_order.production_log[l].start) {
+                    // thid log entry is for the active activity
+                    if ((work_order.production_log[l].end) && (work_order.production_log[l].employee === employee)) {
+                        // this node has an end from this user
+                        //is_started = false;
+                        //break;
+                    } else if ((work_order.production_log[l].start) && (work_order.production_log[l].employee === employee)) {
+                        // this node is an open start line
                         is_started = true;
                         cdn = work_order.production_log[l].name;
-                        break;
+                        //break;
+                    } 
+                    if ((work_order.production_log[l].completed === 1) && (!is_completed)) {
+                        // this note is completed
+                        document.getElementById("tick_complete_" + work_order.production_steps[s].name).style.visibility = "visible";
+                        is_completed = true;
+                        // break;
                     }
                 }
             }
             if (is_started) {
                 var btn_stop = document.getElementById("btn_stop_" + work_order.production_steps[s].name);
                 btn_stop.style.visibility = "visible";
-                btn_stop.onclick = frappe.production_control.stop_log.bind(this, work_order.name, cdn)
+                btn_stop.onclick = frappe.production_control.stop_log.bind(this, work_order.name, cdn, employee)
 
                 var btn_complete = document.getElementById("btn_complete_" + work_order.production_steps[s].name);
                 btn_complete.style.visibility = "visible";
-                btn_complete.onclick = frappe.production_control.complete_log.bind(this, work_order.name, cdn);
+                btn_complete.onclick = frappe.production_control.complete_log.bind(this, work_order.name, cdn, employee);
 
             } else if (!is_completed) {
                 var btn_start = document.getElementById("btn_start_" + work_order.production_steps[s].name);
                 btn_start.style.visibility = "visible";
-                btn_start.onclick = frappe.production_control.start_log.bind(this, work_order.name, work_order.production_steps[s].production_step_type);
+                btn_start.onclick = frappe.production_control.start_log.bind(this, work_order.name, work_order.production_steps[s].production_step_type, employee);
             }
             var btn_remark = document.getElementById("btn_remark");
             btn_remark.onclick = frappe.production_control.remark.bind(this, work_order.name);
 
         }
     },
-    start_log: function (work_order, production_step_type) {
-        var employee = document.getElementById("employee").value;
+    start_log: function (work_order, production_step_type, employee) {
         frappe.call({
             method: 'stanztech.stanztech.page.production_control.production_control.start_log',
             args: {
@@ -137,24 +141,26 @@ frappe.production_control = {
             }
         });
     },
-    complete_log: function (work_order, cdn) {
+    complete_log: function (work_order, cdn, employee) {
         frappe.call({
             method: 'stanztech.stanztech.page.production_control.production_control.complete_log',
             args: {
                 'work_order': work_order,
-                'cdn': cdn
+                'cdn': cdn,
+                'employee': employee
             },
             callback: function(r) {
                 frappe.production_control.get_work_order(work_order);
             }
         });
     },
-    stop_log: function (work_order, cdn) {
+    stop_log: function (work_order, cdn, employee) {
         frappe.call({
             method: 'stanztech.stanztech.page.production_control.production_control.end_log',
             args: {
                 'work_order': work_order,
-                'cdn': cdn
+                'cdn': cdn,
+                'employee': employee
             },
             callback: function(r) {
                 frappe.production_control.get_work_order(work_order);

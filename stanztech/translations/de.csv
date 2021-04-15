@@ -7,6 +7,8 @@ Page: Production Control,Scan Work Order QR-Code,QR-Code scannen
 Page: Production Control,Remark,Anmerkung
 Page: Production Control,Add remark,Anmerkung hinzufügen
 Page: Production Control,Updated,Aktualisiert
+Page: Production Control,Total Time,Gesamtzeit
+Page: Production Control,Production Log,Produktionsprotokoll
 DocType: Sales Invoice,Return,Gutschrift
 DocType: Stanztech Settings,Stanztech Settings,Stanztech-Einstellungen
 DocType: Stanztech Settings,Label Printer,Etikettendrucker
