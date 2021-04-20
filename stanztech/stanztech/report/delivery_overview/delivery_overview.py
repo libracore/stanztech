@@ -58,6 +58,9 @@ def get_data(filters):
         LEFT JOIN `tabItem` ON `tabItem`.`item_code` = `tabSales Order Item`.`item_code` 
         LEFT JOIN `tabPurchase Order Item` ON `tabPurchase Order Item`.`sales_order_item` = `tabSales Order Item`.`name`
         WHERE `tabSales Order`.`delivery_date` <= '{to_date}'
+          AND `tabSales Order`.`docstatus` = 1
+          AND `tabSales Order`.`delivery_status` IN ("Not Delivered", "Partly Delivered")
+          AND `tabSales Order`.`status` NOT IN ("Closed", "Completed")
         ORDER BY `tabSales Order`.`delivery_date` ASC, `tabSales Order`.`name` ASC;
       """.format(to_date=filters['to_date'])
     
