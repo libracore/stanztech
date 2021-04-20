@@ -13,7 +13,6 @@
         <th scope="col">{{ __("Work Order") }}</th>
         <th scope="col">{{ __("Item") }}</th>
         <th scope="col">{{ __("Qty") }}</th>
-        <th scope="col">{{ __("Status") }}</th>
         <th scope="col">{{ __("Steps") }}</th>
         <th scope="col">{{ __("Action") }}</th>
     </tr>
@@ -22,16 +21,19 @@
         <td><a href="/desk#Form/Work Order/{{ name }}">{{ name }}</a></td>
         <td><a href="/desk#Form/Item/{{ production_item }}">{{ production_item }}</a></td>
         <td>{{ qty }}</td>
-        <td>{{ __(status) }}</td>
         <td>
+            <table>
         {% for s in production_steps %}
-            <p style="padding: 5px; ">{{ s.production_step_type }} 
-            <i class="glyphicon glyphicon-ok" style="visibility: hidden; " id="tick_complete_{{ s.name }}"></i>
+            <tr>
+            <td style="padding: 5px; ">{{ s.production_step_type }}</td>
+            <td style="padding: 5px; "><i class="glyphicon glyphicon-ok" style="visibility: hidden; " id="tick_complete_{{ s.name }}"></i>
             <button type="submit" class="btn btn-sm btn-warning" id="btn_start_{{ s.name }}" style="visibility: hidden; ">{{ __("Start") }}</button>
             <button type="submit" class="btn btn-sm btn-danger" id="btn_stop_{{ s.name }}" style="visibility: hidden; ">{{ __("Pause") }}</button>
             <button type="submit" class="btn btn-sm btn-success" id="btn_complete_{{ s.name }}" style="visibility: hidden; ">{{ __("Completed") }}</button>
-            </p>
+            </td>
+            </tr>
         {% endfor %}
+            </table>
         </td>
         <td>
             <button type="submit" class="btn btn-sm btn-primary" id="btn_finish" style="visibility: hidden; ">{{ __("Finish") }}</button>
