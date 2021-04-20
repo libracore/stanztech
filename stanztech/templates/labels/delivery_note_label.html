@@ -6,7 +6,7 @@
 <table style="width: 57mm; height: 27mm; {% if vars.counter < (detail_count) %}page-break-after: always;{% endif %} font-size: 12px; ">
     <tr>
         <td style="margin-top: 0px; font-site: 8px; ">
-        {{ _("Delivery Note") }}: {{ d.name }}<br>
+        {{ _("Reference") }}: {{ d.po_no or d.name }}<br>
         {{ i.item_code }}<br>
         {{ i.item_name }}<br>
         {{ i.qty }} {{ i.uom }}

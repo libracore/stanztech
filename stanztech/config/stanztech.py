@@ -66,6 +66,14 @@ def get_data():
                        "name": "Sales Invoice",
                        "label": _("Sales Invoice"),
                        "description": _("Sales Invoice")                   
+                   },
+                   {
+                       "type": "report",
+                       "doctype": "Sales Order",
+                       "name": "Delivery Overview",
+                       "label": _("Delivery Overview"),
+                       "description": _("Delivery Overview"),
+                       "is_query_report": True
                    }
             ]
         },
