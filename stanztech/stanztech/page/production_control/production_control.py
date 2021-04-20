@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-2019, libracore and contributors
+# Copyright (c) 2017-2021, libracore and contributors
 # License: AGPL v3. See LICENCE
-#
-# NOTE: this is the old transfer method. 
-# It is replaced by the Abacus Transfer File and will be deprecated soon
 #
 
 from __future__ import unicode_literals
@@ -26,7 +23,7 @@ def end_log(work_order, cdn, employee, completed=0):
         if log.name == cdn:
             log.end = datetime.now()
             log.completed = completed
-            log.duration = float((log.end - log.start).total_seconds() / 3600)
+            log.duration = float((log.end - log.start).total_seconds() / 60)
             break
         total_duration += log.duration
     wo.total_time = total_duration
