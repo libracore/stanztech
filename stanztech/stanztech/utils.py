@@ -3,6 +3,7 @@
 
 import frappe
 from frappe import _
+import json
 
 @frappe.whitelist()
 def get_external_details(item_code):
@@ -20,3 +21,21 @@ def get_so_items_by_reference(reference_str):
                    WHERE `tabSales Order`.`po_no` IN ('{refs}');""".format(refs="', '".join(references))
     so_items = frappe.db.sql(sql_query, as_dict=True)
     return so_items
+
+@frappe.whitelist()
+def bulk_create_items(quickentry, item_group):
+    if type(quickentry) is str:
+        quickentry = json.loads(quickentry)
+    else:
+        quickentry = dict(quickentry)
+        
+    for i in quickentry:
+        if not frappe.db.exists("Item", i['item_code']):
+            new_item = frappe.get_doc({
+                "doctype": "Item",
+                "item_code": i['item_code'],
+                "item_group": item_group
+            })
+            new_item.insert()
+    frappe.db.commit()
+    return

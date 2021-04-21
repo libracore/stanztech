@@ -14,3 +14,4 @@ DocType: Stanztech Settings,Stanztech Settings,Stanztech-Einstellungen
 DocType: Stanztech Settings,Label Printer,Etikettendrucker
 DocType: Stanztech Settings,Please define a label printer under Stanztech Settings.,Bitte wählen Sie einen Etikettendrucker in den Stanztech-Einstellungen
 Report: Delivery Overview,Delivery Overview,Lieferterminübersicht
+DocType: BOM,Insert Steps,Schritte einfügen
