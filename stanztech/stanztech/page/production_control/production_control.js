@@ -34,6 +34,7 @@ frappe.production_control = {
                 } else {
                     // open work order
                     frappe.production_control.get_work_order(this.value);
+                    this.value = "";
                 }
             }
         });
