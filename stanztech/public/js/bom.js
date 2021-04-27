@@ -10,7 +10,8 @@ function insert_steps(frm) {
         'method': "frappe.client.get_list",
         'args': {
             'doctype': "Production Step Type",
-            'fields': ["title"]
+            'fields': ["title"],
+            'limit_page_length': 100
         },
         'callback': function(response) {
             var values = response.message;
