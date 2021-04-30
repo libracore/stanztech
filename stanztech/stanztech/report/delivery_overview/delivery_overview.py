@@ -16,16 +16,16 @@ def execute(filters=None):
 def get_columns():
     return [
         {"label": _("Sales Order"), "fieldname": "sales_order", "fieldtype": "Link", "options": "Sales Order", "width": 120},
-        {"label": _("Customer"), "fieldname": "customer", "fieldtype": "Link", "options": "Customer", "width": 40},        
+        # {"label": _("Customer"), "fieldname": "customer", "fieldtype": "Link", "options": "Customer", "width": 40},        
         {"label": _("Customer name"), "fieldname": "customer_name", "fieldtype": "Data", "width": 150},
         {"label": _("SO Date"), "fieldname": "so_date", "fieldtype": "Date", "width": 80},
         {"label": _("SO Delivery"), "fieldname": "so_delivery", "fieldtype": "Date", "width": 80},
-        {"label": _("Reference"), "fieldname": "reference", "fieldtype": "Data", "width": 60},
+        {"label": _("Reference"), "fieldname": "reference", "fieldtype": "Data", "width": 100},
         {"label": _("Purchase"), "fieldname": "is_purchase_item", "fieldtype": "Check", "width": 20},
         {"label": _("Item"), "fieldname": "item_code", "fieldtype": "Link", "options": "Item", "width": 80},
+        {"label": _("PO Item Date"), "fieldname": "po_item_date", "fieldtype": "Date", "width": 80},
         {"label": _("Purchase Order"), "fieldname": "purchase_order", "fieldtype": "Link", "options": "Purchase Order", "width": 80},
         {"label": _("SO Item Date"), "fieldname": "so_item_date", "fieldtype": "Date", "width": 80},
-        {"label": _("PO Item Date"), "fieldname": "po_item_date", "fieldtype": "Date", "width": 80},
         {"label": _("Qty"), "fieldname": "qty", "fieldtype": "Float", "width": 80},
         {"label": _("Qty delivered"), "fieldname": "qty_delivered", "fieldtype": "Float",  "width": 80},
         {"label": _("Done"), "fieldname": "done", "fieldtype": "Check",  "width": 30}
