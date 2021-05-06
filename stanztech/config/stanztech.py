@@ -34,7 +34,7 @@ def get_data():
             ]
         },
         {
-            "label": _("Ausftragsbearbeitung"),
+            "label": _("Auftragsbearbeitung"),
             "icon": "fa fa-bank",
             "items": [
                    {
@@ -187,6 +187,19 @@ def get_data():
                         "name": "DATEV",
                         "label": _("DATEV"),
                         "doctype": "GL Entry",
+                        "is_query_report": True
+                    }
+            ]
+        },
+        {
+            "label": _("Auswertungen"),
+            "icon": "fa fa-users",
+            "items": [
+                    {
+                        "type": "report",
+                        "name": "Daily Activity Log",
+                        "label": _("Daily Activity Log"),
+                        "doctype": "Work Order",
                         "is_query_report": True
                     }
             ]
