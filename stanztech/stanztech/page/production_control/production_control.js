@@ -31,6 +31,11 @@ frappe.production_control = {
                     var employee = document.getElementById("employee");
                     employee.value = this.value;
                     this.value = "";
+                    // reload work order if one is open
+                    var work_order = document.getElementById("work_order_reference").value;
+                    if (work_order) {
+                        frappe.production_control.get_work_order(work_order);
+                    }
                 } else {
                     // open work order
                     frappe.production_control.get_work_order(this.value);
@@ -47,6 +52,7 @@ frappe.production_control = {
         }
     },
     get_work_order: function (work_order) {
+        document.getElementById("work_order_reference").value = work_order;
         frappe.call({
             method: 'stanztech.stanztech.page.production_control.production_control.get_work_order',
             args: {'work_order': work_order },
@@ -91,42 +97,44 @@ frappe.production_control = {
             // go through logs backwards
             for (var l = (work_order.production_log.length - 1); l >= 0; l--) {
                 if (work_order.production_log[l].production_step_type === work_order.production_steps[s].production_step_type) {
-                    // thid log entry is for the active activity
+                    // this log entry is for the active activity
                     if ((work_order.production_log[l].end) && (work_order.production_log[l].employee === employee)) {
                         // this node has an end from this user
-                        //is_started = false;
-                        //break;
                     } else if ((work_order.production_log[l].start) && (work_order.production_log[l].employee === employee)) {
                         // this node is an open start line
                         is_started = true;
                         cdn = work_order.production_log[l].name;
-                        //break;
                     } 
                     if ((work_order.production_log[l].completed === 1) && (!is_completed)) {
                         // this note is completed
                         document.getElementById("tick_complete_" + work_order.production_steps[s].name).style.visibility = "visible";
                         is_completed = true;
-                        // break;
                     }
                 }
             }
-            if (is_started) {
-                var btn_stop = document.getElementById("btn_stop_" + work_order.production_steps[s].name);
-                btn_stop.style.visibility = "visible";
-                btn_stop.onclick = frappe.production_control.stop_log.bind(this, work_order.name, cdn, employee)
+            if (work_order.docstatus < 2) {
+                if (is_started) {
+                    var btn_stop = document.getElementById("btn_stop_" + work_order.production_steps[s].name);
+                    btn_stop.style.visibility = "visible";
+                    btn_stop.onclick = frappe.production_control.stop_log.bind(this, work_order.name, cdn, employee)
 
-                var btn_complete = document.getElementById("btn_complete_" + work_order.production_steps[s].name);
-                btn_complete.style.visibility = "visible";
-                btn_complete.onclick = frappe.production_control.complete_log.bind(this, work_order.name, cdn, employee);
+                    var btn_complete = document.getElementById("btn_complete_" + work_order.production_steps[s].name);
+                    btn_complete.style.visibility = "visible";
+                    btn_complete.onclick = frappe.production_control.complete_log.bind(this, work_order.name, cdn, employee);
 
-            } else if (!is_completed) {
-                var btn_start = document.getElementById("btn_start_" + work_order.production_steps[s].name);
-                btn_start.style.visibility = "visible";
-                btn_start.onclick = frappe.production_control.start_log.bind(this, work_order.name, work_order.production_steps[s].production_step_type, employee);
+                } else if (!is_completed) {
+                    // start button
+                    var btn_start = document.getElementById("btn_start_" + work_order.production_steps[s].name);
+                    btn_start.style.visibility = "visible";
+                    btn_start.onclick = frappe.production_control.start_log.bind(this, work_order.name, work_order.production_steps[s].production_step_type, employee);
+                    // checkout button
+                    var btn_checkout = document.getElementById("btn_checkout_" + work_order.production_steps[s].name);
+                    btn_checkout.style.visibility = "visible";
+                    btn_checkout.onclick = frappe.production_control.checkout.bind(this, work_order.name, work_order.production_steps[s].production_step_type, employee);
+                }
+                var btn_remark = document.getElementById("btn_remark");
+                btn_remark.onclick = frappe.production_control.remark.bind(this, work_order.name);
             }
-            var btn_remark = document.getElementById("btn_remark");
-            btn_remark.onclick = frappe.production_control.remark.bind(this, work_order.name);
-
         }
     },
     start_log: function (work_order, production_step_type, employee) {
@@ -185,6 +193,28 @@ frappe.production_control = {
             });
         },
         __('Add remark'),
+        'OK'
+        );
+    },
+    checkout: function (work_order, production_step_type, employee) {
+        frappe.prompt([
+            {'fieldname': 'duration', 'fieldtype': 'Int', 'label': __('Duration'), 'description': __("in minutes"), 'reqd': 1}  
+        ],
+        function(values){
+            frappe.call({
+                method: 'stanztech.stanztech.page.production_control.production_control.checkout',
+                args: {
+                    'work_order': work_order,
+                    'duration': values.duration,
+                    'production_step_type': production_step_type,
+                    'employee': employee
+                },
+                callback: function(r) {
+                    frappe.production_control.get_work_order(work_order);
+                }
+            });
+        },
+        __('Checkout'),
         'OK'
         );
     }

@@ -7,7 +7,7 @@ from __future__ import unicode_literals
 import frappe
 from frappe import throw, _
 import hashlib
-from datetime import datetime
+from datetime import datetime, timedelta
 
 @frappe.whitelist()
 def get_work_order(work_order):
@@ -53,5 +53,21 @@ def remark(work_order, remark):
         wo.remarks += "<br>" + remark
     else:
         wo.remarks = remark
+    wo.save()
+    return
+
+@frappe.whitelist()
+def checkout(work_order, duration, production_step_type, employee=None):
+    wo = frappe.get_doc("Work Order", work_order)
+    duration = int(duration)
+    row = wo.append('production_log', {
+        'production_step_type': production_step_type,
+        'start': datetime.now(),
+        'employee': employee,
+        'duration': duration,
+        'completed': 1,
+        'end': datetime.now() + timedelta(minutes = duration)
+    })
+    wo.total_time = wo.total_time + duration
     wo.save()
     return
