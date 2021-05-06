@@ -18,7 +18,7 @@ def get_so_items_by_reference(reference_str):
                     `tabSales Order Item`.`name` AS `so_detail`
                    FROM `tabSales Order Item`
                    LEFT JOIN `tabSales Order` ON `tabSales Order`.`name` = `tabSales Order Item`.`parent`
-                   WHERE `tabSales Order`.`po_no` IN ('{refs}');""".format(refs="', '".join(references))
+                   WHERE `tabSales Order`.`po_no` IN ('{refs}') AND `tabSales Order`.`docstatus` = 1;""".format(refs="', '".join(references))
     so_items = frappe.db.sql(sql_query, as_dict=True)
     return so_items
 
