@@ -10,6 +10,7 @@ Page: Production Control,Updated,Aktualisiert
 Page: Production Control,Total Time,Gesamtzeit
 Page: Production Control,Production Log,Produktionsprotokoll
 Page: Production Control,in minutes,in Minuten
+Page: Production Control,Checkout,Schnell abschliessen
 DocType: Sales Invoice,Return,Gutschrift
 DocType: Stanztech Settings,Stanztech Settings,Stanztech-Einstellungen
 DocType: Stanztech Settings,Label Printer,Etikettendrucker
