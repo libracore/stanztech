@@ -136,7 +136,13 @@ def get_data():
                        "label": _("Engpassmenge"),
                        "description": _("Engpassmenge"),
                        "is_query_report": True
-                   }               
+                   },
+                   {
+                       "type": "doctype",
+                       "name": "Stock Entry",
+                       "label": _("Stock Entry"),
+                       "description": _("Stock Entry")                   
+                   }             
             ]
         },
         {
