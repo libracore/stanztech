@@ -28,6 +28,7 @@ def end_log(work_order, cdn, employee, completed=0):
         total_duration += log.duration
     wo.total_time = total_duration
     wo.save()
+    frappe.db.commit()
     return
 
 @frappe.whitelist()
@@ -44,6 +45,7 @@ def start_log(work_order, production_step_type, employee=None):
         'employee': employee
     })
     wo.save()
+    frappe.db.commit()
     return
     
 @frappe.whitelist()
@@ -54,6 +56,7 @@ def remark(work_order, remark):
     else:
         wo.remarks = remark
     wo.save()
+    frappe.db.commit()
     return
 
 @frappe.whitelist()
@@ -70,4 +73,5 @@ def checkout(work_order, duration, production_step_type, employee=None):
     })
     wo.total_time = wo.total_time + duration
     wo.save()
+    frappe.db.commit()
     return
