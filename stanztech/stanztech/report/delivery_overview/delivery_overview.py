@@ -17,21 +17,21 @@ def get_columns():
     return [
         {"label": _("Sales Order"), "fieldname": "sales_order", "fieldtype": "Link", "options": "Sales Order", "width": 120},
         # {"label": _("Customer"), "fieldname": "customer", "fieldtype": "Link", "options": "Customer", "width": 40},        
-        {"label": _("Customer name"), "fieldname": "customer_name", "fieldtype": "Data", "width": 150},
+        {"label": _("Customer name"), "fieldname": "customer_name", "fieldtype": "Data", "width": 200},
         {"label": _("SO Date"), "fieldname": "so_date", "fieldtype": "Date", "width": 80},
         {"label": _("SO Delivery"), "fieldname": "so_delivery", "fieldtype": "Date", "width": 80},
         {"label": _("Reference"), "fieldname": "reference", "fieldtype": "Data", "width": 100},
         #{"label": _("Purchase"), "fieldname": "is_purchase_item", "fieldtype": "Check", "width": 20},
-        {"label": _("Item"), "fieldname": "item_code", "fieldtype": "Link", "options": "Item", "width": 80},
+        {"label": _("Item"), "fieldname": "item_code", "fieldtype": "Link", "options": "Item", "width": 130},
         {"label": _("Description"), "fieldname": "description", "fieldtype": "Text Editor", "width": 200},
-        {"label": _("Purchase Order"), "fieldname": "purchase_order", "fieldtype": "Link", "options": "Purchase Order", "width": 80},
-        {"label": _("Order Confirmation No"), "fieldname": "order_confirmation_no", "fieldtype": "Data", "width": 100},
+        {"label": _("Purchase Order"), "fieldname": "purchase_order", "fieldtype": "Link", "options": "Purchase Order", "width": 130},
+        {"label": _("Order Confirmation No"), "fieldname": "order_confirmation_no", "fieldtype": "Data", "width": 150},
         {"label": _("Reqd By Date"), "fieldname": "po_item_date", "fieldtype": "Date", "width": 80},
         {"label": _("SO Item Date"), "fieldname": "so_item_date", "fieldtype": "Date", "width": 80},
         {"label": _("Qty"), "fieldname": "qty", "fieldtype": "Float", "width": 80},
         {"label": _("Qty delivered"), "fieldname": "qty_delivered", "fieldtype": "Float",  "width": 80},
         {"label": _("Done"), "fieldname": "done", "fieldtype": "Check",  "width": 30},
-        {"label": _("Information"), "fieldname": "information", "fieldtype": "Data",  "width": 150}
+        {"label": _("Information"), "fieldname": "information", "fieldtype": "Data",  "width": 450}
     ]
 
 def get_data(filters):
@@ -40,6 +40,10 @@ def get_data(filters):
     else:
         filters = dict(filters)
     
+    conditions = ""
+    if 'from_date' in filters:
+        conditions += " AND `tabSales Order`.`delivery_date` >= '{from_date}' ".format(from_date=filters['from_date'])
+        
     # prepare query
     sql_query = """SELECT
           `tabSales Order`.`name` AS `sales_order`,
@@ -68,8 +72,9 @@ def get_data(filters):
           AND `tabSales Order`.`docstatus` = 1
           AND `tabSales Order`.`delivery_status` IN ("Not Delivered", "Partly Delivered")
           AND `tabSales Order`.`status` NOT IN ("Closed", "Completed")
+          {conditions}
         ORDER BY `tabSales Order`.`delivery_date` ASC, `tabSales Order`.`name` ASC;
-      """.format(to_date=filters['to_date'])
+      """.format(to_date=filters['to_date'], conditions=conditions)
     
     data = frappe.db.sql(sql_query, as_dict=True)
 

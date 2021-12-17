@@ -5,11 +5,15 @@
 frappe.query_reports["Delivery Overview"] = {
     "filters": [
         {
+            "fieldname":"from_date",
+            "label": __("From Date"),
+            "fieldtype": "Date"
+        },
+        {
             "fieldname":"to_date",
             "label": __("To Date"),
             "fieldtype": "Date",
             "default": frappe.datetime.add_days(frappe.datetime.get_today(), +14),
-            "width": "60px",
             "reqd": 1
         }
     ],
