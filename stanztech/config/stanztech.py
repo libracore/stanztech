@@ -74,6 +74,14 @@ def get_data():
                        "label": _("Delivery Overview"),
                        "description": _("Delivery Overview"),
                        "is_query_report": True
+                   },
+                   {
+                       "type": "report",
+                       "doctype": "Sales Order",
+                       "name": "Delivery Positions",
+                       "label": _("Delivery Positions"),
+                       "description": _("Delivery Positions"),
+                       "is_query_report": True
                    }
             ]
         },
