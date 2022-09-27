@@ -3,13 +3,17 @@
   {% for i in d['items'] %}<!-- per item position -->
 
 {% if vars.update({'counter': vars.counter + 1}) %}{% endif %}
-<table style="width: 57mm; height: 27mm; {% if vars.counter < (detail_count) %}page-break-after: always;{% endif %} font-size: 12px; ">
+<table style="width: 73m; height: 33mm; {% if vars.counter < (detail_count) %}page-break-after: always;{% endif %} font-size: 12px; ">
     <tr>
-        <td style="margin-top: 0px; font-site: 8px; ">
-        {{ _("Reference") }}: {{ d.po_no or d.name }}<br>
-        {{ i.item_code }}<br>
-        {{ i.item_name }}<br>
-        {{ i.qty }} {{ i.uom }}
+        <td style="margin-top: 0px; font-site: 8px; width: 70px; ">
+            <center><img src="https://stanztech.libracore.ch/files/stanztech_logo_2022.png" style="width: 30px; "></center>
+        </td>
+        <td>
+            <br>
+            {{ _("Ref") }}: {{ d.po_no or d.name }}<br>
+            {{ i.item_code }}<br>
+            {{ i.item_name }}<br>
+            {{ i.qty }} {{ i.uom }}
         </td>
     </tr>
 </table>

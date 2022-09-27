@@ -60,12 +60,15 @@ def get_item_label(selected_items):
     frappe.local.response.type = "download"
 
 @frappe.whitelist()
-def get_delivery_note_label(selected_delivery_notes):
+def get_delivery_note_label(selected_delivery_notes, template="stanztech/templates/labels/delivery_note_label.html", printer=None):
     # get label printer
     settings = frappe.get_doc("Stanztech Settings", "Stanztech Settings")
     if not settings.label_printer:
         frappe.throw( _("Please define a label printer under Stanztech Settings.") )
-    label_printer = settings.label_printer
+    if not printer:
+        label_printer = settings.label_printer
+    else:
+        label_printer = printer
     # get raw data
     data = { 
         'delivery_notes': get_delivery_note_label_data(selected_delivery_notes),
@@ -86,7 +89,7 @@ def get_delivery_note_label(selected_delivery_notes):
         for i in dn_doc.items:
             data['detail_count'] += 1
     # prepare content
-    content = frappe.render_template('stanztech/templates/labels/delivery_note_label.html', data)
+    content = frappe.render_template(template, data)
     # create pdf
     printer = frappe.get_doc("Label Printer", label_printer)
     pdf = create_pdf(printer, content)
@@ -96,12 +99,15 @@ def get_delivery_note_label(selected_delivery_notes):
     frappe.local.response.type = "download"
 
 @frappe.whitelist()
-def get_sales_order_label(selected_sales_orders):
+def get_sales_order_label(selected_sales_orders, template="stanztech/templates/labels/delivery_note_label.html", printer=None):
     # get label printer
     settings = frappe.get_doc("Stanztech Settings", "Stanztech Settings")
     if not settings.label_printer:
         frappe.throw( _("Please define a label printer under Stanztech Settings.") )
-    label_printer = settings.label_printer
+    if not printer:
+        label_printer = settings.label_printer
+    else:
+        label_printer = printer
     # get raw data
     data = { 
         'delivery_notes': get_sales_order_label_data(selected_sales_orders),
@@ -118,7 +124,7 @@ def get_sales_order_label(selected_sales_orders):
         for i in dn_doc.items:
             data['detail_count'] += 1
     # prepare content
-    content = frappe.render_template('stanztech/templates/labels/delivery_note_label.html', data)
+    content = frappe.render_template(template, data)
     # create pdf
     printer = frappe.get_doc("Label Printer", label_printer)
     pdf = create_pdf(printer, content)
