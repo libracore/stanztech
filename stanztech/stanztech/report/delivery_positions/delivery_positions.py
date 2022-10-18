@@ -30,7 +30,7 @@ def get_columns():
         {"label": _("Reqd By Date"), "fieldname": "po_item_date", "fieldtype": "Date", "width": 80},
         {"label": _("Qty"), "fieldname": "qty", "fieldtype": "Float", "width": 80},
         {"label": _("Qty delivered"), "fieldname": "qty_delivered", "fieldtype": "Float",  "width": 80},
-        {"label": _("Done"), "fieldname": "done", "fieldtype": "Check",  "width": 30},
+        #{"label": _("Done"), "fieldname": "done", "fieldtype": "Check",  "width": 30},
         {"label": _("Information"), "fieldname": "information", "fieldtype": "Data",  "width": 450}
     ]
 
@@ -60,7 +60,6 @@ def get_data(filters):
           `tabPurchase Order Item`.`schedule_date` AS `po_item_date`,
           `tabSales Order Item`.`qty` AS `qty`,
           `tabSales Order Item`.`delivered_qty` AS `qty_delivered`,
-          IF ((`tabSales Order Item`.`qty` - `tabSales Order Item`.`delivered_qty`) <= 0, 1, 0) AS `done`,
           `tabSales Order`.`information` AS `information`,
           `tabPurchase Order`.`order_confirmation_no` AS `order_confirmation_no`
         FROM `tabSales Order Item`
@@ -68,10 +67,11 @@ def get_data(filters):
         LEFT JOIN `tabItem` ON `tabItem`.`item_code` = `tabSales Order Item`.`item_code` 
         LEFT JOIN `tabPurchase Order Item` ON `tabPurchase Order Item`.`sales_order_item` = `tabSales Order Item`.`name`
         LEFT JOIN `tabPurchase Order` ON `tabPurchase Order`.`name` = `tabPurchase Order Item`.`parent`
-        WHERE `tabSales Order`.`delivery_date` <= '{to_date}'
+        WHERE `tabSales Order Item`.`delivery_date` <= '{to_date}'
           AND `tabSales Order`.`docstatus` = 1
           AND `tabSales Order`.`delivery_status` IN ("Not Delivered", "Partly Delivered")
           AND `tabSales Order`.`status` NOT IN ("Closed", "Completed")
+          AND (`tabSales Order Item`.`qty` - `tabSales Order Item`.`delivered_qty`) <= 0
           {conditions}
         ORDER BY `tabSales Order Item`.`delivery_date` ASC, `tabSales Order`.`name` ASC;
       """.format(to_date=filters['to_date'], conditions=conditions)
