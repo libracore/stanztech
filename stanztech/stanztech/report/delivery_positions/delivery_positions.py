@@ -71,7 +71,7 @@ def get_data(filters):
           AND `tabSales Order`.`docstatus` = 1
           AND `tabSales Order`.`delivery_status` IN ("Not Delivered", "Partly Delivered")
           AND `tabSales Order`.`status` NOT IN ("Closed", "Completed")
-          AND (`tabSales Order Item`.`qty` - `tabSales Order Item`.`delivered_qty`) <= 0
+          AND (`tabSales Order Item`.`qty` - `tabSales Order Item`.`delivered_qty`) > 0
           {conditions}
         ORDER BY `tabSales Order Item`.`delivery_date` ASC, `tabSales Order`.`name` ASC;
       """.format(to_date=filters['to_date'], conditions=conditions)
