@@ -100,6 +100,18 @@ def get_data():
                        "name": "Work Order",
                        "label": _("Work Order"),
                        "description": _("Work Order")
+                   },
+                   {
+                       "type": "doctype",
+                       "name": "Project",
+                       "label": _("Project"),
+                       "description": _("Project")
+                   },
+                   {
+                       "type": "doctype",
+                       "name": "Timesheet",
+                       "label": _("Timesheet"),
+                       "description": _("Timesheet")
                    }
             ]
         },

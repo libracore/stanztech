@@ -1,0 +1,37 @@
+<style>
+.btn-secondary {
+    background-color: silver;
+}
+
+.btn-secondary:hover {
+    background-color: grey;
+}
+</style>
+<table class="table">
+  <thead class="thead-light">
+    <tr>
+        <th scope="col">{{ __("Project") }}</th>
+        <th scope="col">{{ __("Customer") }}</th>
+        <th scope="col">{{ __("Tasks") }}</th>
+    </tr>
+  </thead>
+    <tr>
+        <td><a href="/desk#Form/Project/{{ name }}">{{ name }}</a></td>
+        <td><a href="/desk#Form/Customer/{{ customer }}">{{ customer_name }}</a></td>
+        <td>
+            <table>
+            {% for s in tasks %}
+                <tr>
+                    <td style="padding: 5px; ">{{ s.subject }}</td>
+                    <td style="padding: 5px; "><i class="glyphicon glyphicon-ok" style="visibility: hidden; " id="tick_complete_{{ s.name }}"></i>
+                        <button type="submit" class="btn btn-sm btn-warning" id="btn_start_{{ s.name }}" style="visibility: hidden; ">{{ __("Start") }}</button>
+                        <button type="submit" class="btn btn-sm btn-danger" id="btn_stop_{{ s.name }}" style="visibility: hidden; ">{{ __("Pause") }}</button>
+                    </td>
+                </tr>
+            {% endfor %}
+            </table>
+        </td>
+    </tr> 
+
+</table>
+

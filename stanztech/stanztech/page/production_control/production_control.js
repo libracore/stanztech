@@ -10,6 +10,12 @@ frappe.pages['production_control'].on_page_load = function(wrapper) {
     
     // add the application reference
     frappe.breadcrumbs.add("Stanztech");
+    
+    // end of work button
+    page.set_primary_action( __('Feierabend'), () => {
+        frappe.production_control.end_work(page);
+    });
+    
 }
 
 frappe.production_control = {
@@ -36,9 +42,13 @@ frappe.production_control = {
                     if (work_order) {
                         frappe.production_control.get_work_order(work_order);
                     }
-                } else {
+                } else if (this.value.startsWith("FA-")) {
                     // open work order
                     frappe.production_control.get_work_order(this.value);
+                    this.value = "";
+                } else {
+                    // open project
+                    frappe.production_control.get_project(this.value);
                     this.value = "";
                 }
             }
@@ -59,6 +69,17 @@ frappe.production_control = {
             callback: function(r) {
                 var wo = r.message;
                 frappe.production_control.display_work_order(wo);
+            }
+        });
+    },
+    get_project: function (project) {
+        document.getElementById("work_order_reference").value = project;
+        frappe.call({
+            method: 'stanztech.stanztech.page.production_control.production_control.get_project',
+            args: {'project': project },
+            callback: function(r) {
+                var project_record = r.message;
+                frappe.production_control.display_project(project_record);
             }
         });
     },
@@ -135,6 +156,46 @@ frappe.production_control = {
                 var btn_remark = document.getElementById("btn_remark");
                 btn_remark.onclick = frappe.production_control.remark.bind(this, work_order.name);
             }
+        }
+    },
+    display_project: function (project) {
+        var html = frappe.render_template('project_details', project)
+        document.getElementById("work_order_view").innerHTML = html;
+        // verify input
+        var employee = document.getElementById("employee").value;
+        
+        if (employee) {
+            // get actions
+            frappe.call({
+                'method': 'stanztech.stanztech.page.production_control.production_control.check_employee_project',
+                'args': {'employee': employee },
+                'callback': function(r) {
+                    var projects = r.message;
+                    // enable all start buttons
+                    for (var b = 0; b < project.tasks.length; b++) {
+                        var btn_start = document.getElementById("btn_start_" + project.tasks[b].name);
+                        btn_start.style.visibility = "visible";
+                        btn_start.onclick = frappe.production_control.start_project.bind(this, 
+                            project.name, project.tasks[b].name, employee);
+                    }
+                    // find started tasks
+                    if ((projects) && (projects[project.name])) {
+                        for (var t = 0; t < projects[project.name].tasks.length; t++) {
+                            // disable start
+                            var btn_start = document.getElementById("btn_start_" + project.tasks[b].name);
+                            btn_start.style.visibility = "hidden";
+                            // enable stop
+                            var btn_stop = document.getElementById("btn_stop_" + project.tasks[b].name);
+                            btn_start.style.visibility = "visible";
+                            btn_start.onclick = frappe.production_control.stop_project.bind(this, 
+                                employee);
+                        }
+                    }
+                }
+            });
+        } else {
+            // no employee set, cannot start (leave buttons on hidden)
+            
         }
     },
     start_log: function (work_order, production_step_type, employee) {
@@ -217,6 +278,46 @@ frappe.production_control = {
         __('Checkout'),
         'OK'
         );
+    },
+    start_project: function(project, task, employee) {
+        frappe.call({
+            'method': 'stanztech.stanztech.page.production_control.production_control.start_project_time',
+            'args': {
+                'employee': employee,
+                'project': project,
+                'task': task
+            },
+            'callback': function(r) {
+                frappe.production_control.get_project(project);
+            }
+        });
+    },
+    stop_project: function(employee) {
+        frappe.call({
+            'method': 'stanztech.stanztech.page.production_control.production_control.close_project_time',
+            'args': {
+                'employee': employee,
+                'submit': 0
+            },
+            'callback': function(r) {
+                frappe.production_control.get_project(project);
+            }
+        });
+    },
+    end_work: function(page) {
+        var employee = document.getElementById("employee").value;
+        if (employee) {
+            frappe.call({
+                'method': 'stanztech.stanztech.page.production_control.production_control.close_project_time',
+                'args': {
+                    'employee': employee,
+                    'submit': 1
+                },
+                'callback': function(r) {
+                    frappe.show_alert( __("Auf Wiedersehen!") );
+                }
+            });
+        }
     }
 }
 
