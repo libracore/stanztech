@@ -33,7 +33,6 @@
    "allow_on_submit": 1,
    "fieldname": "end",
    "fieldtype": "Datetime",
-   "in_list_view": 1,
    "label": "End"
   },
   {
@@ -64,12 +63,13 @@
    "allow_on_submit": 1,
    "fieldname": "duration",
    "fieldtype": "Float",
+   "in_list_view": 1,
    "label": "Duration",
    "read_only": 1
   }
  ],
  "istable": 1,
- "modified": "2021-04-15 20:14:01.469579",
+ "modified": "2022-12-29 07:25:20.284163",
  "modified_by": "Administrator",
  "module": "Stanztech",
  "name": "Production Log",
