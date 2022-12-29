@@ -40,15 +40,10 @@ frappe.production_control = {
                     // reload work order if one is open
                     var work_order = document.getElementById("work_order_reference").value;
                     if (work_order) {
-                        frappe.production_control.get_work_order(work_order);
+                        frappe.production_control.launch(work_order);
                     }
-                } else if (this.value.startsWith("FA-")) {
-                    // open work order
-                    frappe.production_control.get_work_order(this.value);
-                    this.value = "";
                 } else {
-                    // open project
-                    frappe.production_control.get_project(this.value);
+                    frappe.production_control.launch(this.value);
                     this.value = "";
                 }
             }
@@ -59,6 +54,15 @@ frappe.production_control = {
             var work_order = url.split('=')[1].split('&')[0];
             document.getElementById("work_order").value = work_order;
             frappe.production_control.get_work_order(work_order);
+        }
+    },
+    launch: function (reference) {
+        if (reference.startsWith("FA-")) {
+            // open work order
+            frappe.production_control.get_work_order(reference);
+        } else {
+            // open project
+            frappe.production_control.get_project(reference);
         }
     },
     get_work_order: function (work_order) {
@@ -182,13 +186,12 @@ frappe.production_control = {
                     if ((projects) && (projects[project.name])) {
                         for (var t = 0; t < projects[project.name].tasks.length; t++) {
                             // disable start
-                            var btn_start = document.getElementById("btn_start_" + project.tasks[b].name);
+                            var btn_start = document.getElementById("btn_start_" + projects[project.name].tasks[t]);
                             btn_start.style.visibility = "hidden";
                             // enable stop
-                            var btn_stop = document.getElementById("btn_stop_" + project.tasks[b].name);
-                            btn_start.style.visibility = "visible";
-                            btn_start.onclick = frappe.production_control.stop_project.bind(this, 
-                                employee);
+                            var btn_stop = document.getElementById("btn_stop_" + projects[project.name].tasks[t]);
+                            btn_stop.style.visibility = "visible";
+                            btn_stop.onclick = frappe.production_control.stop_project.bind(this, employee);
                         }
                     }
                 }
@@ -315,6 +318,10 @@ frappe.production_control = {
                 },
                 'callback': function(r) {
                     frappe.show_alert( __("Auf Wiedersehen!") );
+                    var work_order = document.getElementById("work_order_reference").value;
+                    if (work_order) {
+                        frappe.production_control.launch(work_order);
+                    }
                 }
             });
         }
