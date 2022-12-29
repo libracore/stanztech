@@ -22,3 +22,4 @@ Report: Delivery Overview,SO Item Date,Positions-Lieferdatum
 DocType: BOM,Insert Steps,Schritte einfügen
 Report: Daily Activity Log,Daily Activity Log,Tagesbericht
 Report: Delivery Positions,Delivery Positions,Liefertermine nach Positionen
+Page: Production Activity,Production Activity,Fertigungsaktivitäten

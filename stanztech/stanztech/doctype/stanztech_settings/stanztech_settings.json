@@ -6,7 +6,9 @@
  "field_order": [
   "label_printer",
   "sec_production",
-  "default_activity"
+  "default_activity",
+  "col_production",
+  "access_key"
  ],
  "fields": [
   {
@@ -25,10 +27,19 @@
    "fieldtype": "Link",
    "label": "Default Activity",
    "options": "Activity Type"
+  },
+  {
+   "fieldname": "col_production",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "access_key",
+   "fieldtype": "Data",
+   "label": "Access Key"
   }
  ],
  "issingle": 1,
- "modified": "2022-12-28 14:06:41.213050",
+ "modified": "2022-12-29 19:43:43.588864",
  "modified_by": "Administrator",
  "module": "Stanztech",
  "name": "Stanztech Settings",
