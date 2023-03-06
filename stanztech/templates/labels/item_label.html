@@ -1,8 +1,8 @@
 {% for i in range(0, items|len) %}
-<table style="margin: 0px !important; padding: 0px !important; width: 55mm; height: 27mm; {% if i < (items|len - 1) %}page-break-after: always;{% endif %} ">
+<table style="margin: 0px !important; padding: 0px !important; width: 75mm; height: 27mm; {% if i < (items|len - 1) %}page-break-after: always;{% endif %} ">
     <tbody>
         <tr style="height: 27mm !important; margin: 0px !important; padding: 0px !important;">
-            <td style="width: 40mm !important; margin: 0px !important; padding: 0px !important;">
+            <td style="width: 55mm !important; margin: 0px !important; padding: 0px !important;">
                 <p style="font-size: 8px !important; margin: 0px !important; padding: 0px !important;">
                     {{ items[i].item_code }}<br>
                     {{ items[i].item_name }}<br>
