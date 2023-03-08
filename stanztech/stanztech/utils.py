@@ -1,5 +1,9 @@
-# Copyright (c) 2020-2021, libracore and contributors
+# Copyright (c) 2020-2023, libracore and contributors
 # For license information, please see license.txt
+#
+# Get part transactions with 
+# frappe.call({ 'method': 'stanztech.stanztech.utils.get_part_transactions', 'args': {'part': '2512173'}, 'callback': function(r) { console.log(r); }});
+#
 
 import frappe
 from frappe import _
@@ -39,3 +43,25 @@ def bulk_create_items(quickentry, item_group):
             new_item.insert()
     frappe.db.commit()
     return
+
+@frappe.whitelist()
+def get_part_transactions(part):
+    sql_query = """
+        SELECT
+            `tabPurchase Order`.`transaction_date` AS `po_date`,
+            `tabPurchase Order Item`.`parent` AS `purchase_order`,
+            `tabPurchase Receipt Item`.`parent` AS `purchase_receipt`
+        FROM `tabPurchase Order Item`
+        LEFT JOIN `tabPurchase Receipt Item` ON 
+            `tabPurchase Receipt Item`.`purchase_order` = `tabPurchase Order Item`.`parent`
+            AND `tabPurchase Receipt Item`.`part` = `tabPurchase Order Item`.`part`
+            AND `tabPurchase Receipt Item`.`docstatus` < 2
+        LEFT JOIN `tabPurchase Order` ON `tabPurchase Order`.`name` = `tabPurchase Order Item`.`parent`
+        WHERE 
+            `tabPurchase Order Item`.`part` = "{part}"
+            AND `tabPurchase Order Item`.`docstatus` < 2;
+    """.format(part=part)
+    
+    transactions = frappe.db.sql(sql_query, as_dict=True)
+    
+    return transactions
