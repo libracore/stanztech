@@ -28,6 +28,7 @@ def get_columns():
         {"label": _("Order Confirmation No"), "fieldname": "order_confirmation_no", "fieldtype": "Data", "width": 150},
         {"label": _("Reqd By Date"), "fieldname": "po_item_date", "fieldtype": "Date", "width": 80},
         {"label": _("SO Item Date"), "fieldname": "so_item_date", "fieldtype": "Date", "width": 80},
+        {"label": _("Veredelung"), "fieldname": "ext_purchase_order", "fieldtype": "Link", "options": "Purchase Order", "width": 130},
         {"label": _("Qty"), "fieldname": "qty", "fieldtype": "Float", "width": 80},
         {"label": _("Qty delivered"), "fieldname": "qty_delivered", "fieldtype": "Float",  "width": 80},
         {"label": _("Done"), "fieldname": "done", "fieldtype": "Check",  "width": 30},
@@ -62,7 +63,13 @@ def get_data(filters):
           `tabSales Order Item`.`delivered_qty` AS `qty_delivered`,
           IF ((`tabSales Order Item`.`qty` - `tabSales Order Item`.`delivered_qty`) <= 0, 1, 0) AS `done`,
           `tabSales Order`.`information` AS `information`,
-          `tabPurchase Order`.`order_confirmation_no` AS `order_confirmation_no`
+          `tabPurchase Order`.`order_confirmation_no` AS `order_confirmation_no`,
+          (SELECT `parent`
+           FROM `tabPurchase Order Item`
+           WHERE `tabPurchase Order Item`.`docstatus` < 2
+             AND `tabPurchase Order Item`.`kundenauftrag` = `tabSales Order`.`name`
+             AND `tabPurchase Order Item`.`part` = `tabSales Order Item`.`item_code`
+          ) AS `ext_purchase_order`
         FROM `tabSales Order Item`
         LEFT JOIN `tabSales Order` ON `tabSales Order`.`name` = `tabSales Order Item`.`parent`
         LEFT JOIN `tabItem` ON `tabItem`.`item_code` = `tabSales Order Item`.`item_code` 
