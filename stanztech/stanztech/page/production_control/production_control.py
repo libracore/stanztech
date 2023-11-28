@@ -8,6 +8,7 @@ import frappe
 from frappe import throw, _
 import hashlib
 from datetime import datetime, timedelta, date
+from stanztech.stanztech.utils import set_work_order_in_process
 
 @frappe.whitelist()
 def get_work_order(work_order):
@@ -57,6 +58,7 @@ def start_log(work_order, production_step_type, employee=None):
     })
     wo.save()
     frappe.db.commit()
+    set_work_order_in_process(wo.name)
     return
     
 @frappe.whitelist()
@@ -85,6 +87,7 @@ def checkout(work_order, duration, production_step_type, employee=None):
     wo.total_time = wo.total_time + duration
     wo.save()
     frappe.db.commit()
+    set_work_order_in_process(wo.name)
     return
 
 """

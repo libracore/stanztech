@@ -65,3 +65,13 @@ def get_part_transactions(part):
     transactions = frappe.db.sql(sql_query, as_dict=True)
     
     return transactions
+
+def set_work_order_in_process(work_order):
+    wo = frappe.get_doc("Work Order", work_order)
+    if wo.production_log and len(wo.production_log) > 0 and wo.status == "Not Started":
+        frappe.db.sql("""
+            UPDATE `tabWork Order` 
+            SET `status` = "In Process" 
+            WHERE `name` = "{work_order}"; """.format(work_order=work_order))
+        frappe.db.commit()
+    return
