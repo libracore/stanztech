@@ -82,14 +82,17 @@ doctype_js = {
 # ---------------
 # Hook on document methods and events
 
-#doc_events = {
+doc_events = {
 #    "Work Order": {
 #        "on_update": "stanztech.stanztech.utils.work_order_on_update",
 #        "after_save": "stanztech.stanztech.utils.work_order_on_update",
 # 		"on_cancel": "method",
 # 		"on_trash": "method"
 #    }
-#}
+    "Project": {
+        "validate": "stanztech.stanztech.project.set_status"
+    }
+}
 
 # Scheduled Tasks
 # ---------------
