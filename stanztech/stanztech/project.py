@@ -19,3 +19,16 @@ def set_status(self, event):
             
     return
     
+def update_ts_project_status(self, event):
+    # compile all projects in this timesheet
+    projects = []
+    for p in self.time_logs:
+        if p.project and p.project not in projects:
+            projects.append(p.project)
+    
+    # update project status
+    for p in projects:
+        project_record = frappe.get_doc("Project", p)
+        project_record.save()
+        
+    return

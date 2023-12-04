@@ -91,6 +91,9 @@ doc_events = {
 #    }
     "Project": {
         "validate": "stanztech.stanztech.project.set_status"
+    },
+    "Timesheet": {
+        "on_submit": "stanztech.stanztech.project.update_ts_project_status"
     }
 }
 
