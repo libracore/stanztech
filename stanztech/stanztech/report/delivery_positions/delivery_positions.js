@@ -29,7 +29,6 @@ frappe.query_reports["Delivery Positions"] = {
             
             // add event listener for double clicks
             cur_page.container.addEventListener("dblclick", function(event) {
-                console.log(event);
                 var row = event.delegatedTarget.getAttribute("data-row-index");
                 var column = event.delegatedTarget.getAttribute("data-col-index");
                 frappe.prompt([
