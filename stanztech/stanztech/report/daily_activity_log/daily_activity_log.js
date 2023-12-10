@@ -35,6 +35,12 @@ frappe.query_reports["Daily Activity Log"] = {
             "label": __("Work Order"),
             "fieldtype": "Link",
             "options": "Work Order"
+        },
+        {
+            "fieldname":"project",
+            "label": __("Project"),
+            "fieldtype": "Link",
+            "options": "Project"
         }
     ]
 };
