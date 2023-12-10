@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2022, libracore and contributors
+# Copyright (c) 2022-2023, libracore and contributors
 # License: AGPL v3. See LICENCE
 
 from __future__ import unicode_literals
@@ -16,7 +16,7 @@ def get_data(key):
             FROM
                 (
                     SELECT 
-                        `tabProduction Log`.`employee` AS `employee`,
+                        `tabProduction Log`.`employee_name` AS `employee`,
                         `tabProduction Log`.`start` AS `start`,
                         "Work Order" AS `dt`,
                         `tabProduction Log`.`parent` AS `dn`,
@@ -26,11 +26,11 @@ def get_data(key):
                         `tabProduction Log`.`start` >= CURDATE()
                         AND `tabProduction Log`.`end` IS NULL
                     UNION SELECT 
-                        `tabTimesheet`.`employee` AS `employee`,
+                        `tabTimesheet`.`employee_name` AS `employee`,
                         `tabTimesheet Detail`.`from_time` AS `start`,
                         "Project" AS `dt`,
                         `tabTimesheet Detail`.`project` AS `dn`,
-                        `tabTimesheet Detail`.`task` AS `detail`
+                        (SELECT `tabTask`.`subject` FROM `tabTask` WHERE `tabTask`.`name` = `tabTimesheet Detail`.`task`) AS `detail`
                     FROM `tabTimesheet Detail`
                     LEFT JOIN `tabTimesheet` ON `tabTimesheet Detail`.`parent` = `tabTimesheet`.`name`
                     WHERE
@@ -42,6 +42,21 @@ def get_data(key):
         
         data = frappe.db.sql(sql_query, as_dict=True)
         
+        # post-process data
+        for d in data:
+            # rewrite employee name to initials
+            employee_name_parts = d['employee'].split(" ")
+            if len(employee_name_parts) >= 2:
+                d['employee'] = "{0}{1}".format(employee_name_parts[1][0:2], employee_name_parts[0][0:2])
+            else:
+                d['employee'] = employee_name_parts[0][0:2]
+            # extend customer
+            if d['dt'] == "Work Order":
+                d['customer_name'] = frappe.get_value("Sales Order", 
+                    frappe.get_value("Work Order", d['dn'], "sales_order"), "customer_name")
+            elif d['dt'] == "Project":
+                d['customer_name'] = frappe.get_value("Project", d['dn'], "customer_name")
+            
         return data
     else:
         return {'error': 'Not allowed'}

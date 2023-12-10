@@ -54,8 +54,9 @@ function run() {
                         var cell_active_element = row.insertCell(1);
                         cell_active_element.innerHTML = r.message[i].dn;
                         var cell_active_element = row.insertCell(2);
-                        cell_active_element.innerHTML = r.message[i].detail + " (" + r.message[i].start + ")";
+                        cell_active_element.innerHTML = r.message[i].detail /* + " (" + r.message[i].start + ")" */;
                         var cell_action = row.insertCell(3);
+                        cell_action.innerHTML = r.message[i].customer_name;
                     }
                 }
                 
