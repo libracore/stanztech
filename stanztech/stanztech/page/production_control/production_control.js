@@ -175,12 +175,17 @@ frappe.production_control = {
                 'args': {'employee': employee },
                 'callback': function(r) {
                     var projects = r.message;
-                    // enable all start buttons
+                    // enable all start buttons and report prorgess
                     for (var b = 0; b < project.tasks.length; b++) {
                         var btn_start = document.getElementById("btn_start_" + project.tasks[b].name);
                         btn_start.style.visibility = "visible";
                         btn_start.onclick = frappe.production_control.start_project.bind(this, 
                             project.name, project.tasks[b].name, employee);
+                            
+                        var btn_progress = document.getElementById("btn_progress_" + project.tasks[b].name);
+                        btn_progress.style.visibility = "visible";
+                        btn_progress.onclick = frappe.production_control.progress_project.bind(this, 
+                            project.name, project.tasks[b].name, employee, project.tasks[b].progress);
                     }
                     // find started tasks
                     if ((projects) && (projects[project.name])) {
@@ -306,6 +311,32 @@ frappe.production_control = {
                 frappe.production_control.get_project(project);
             }
         });
+    },
+    progress_project: function(project, task, employee, progress) {
+        frappe.prompt([
+                {
+                    'fieldname': 'progress', 
+                    'fieldtype': 'Percent', 
+                    'label': __('Progress'), 
+                    'default': progress,
+                    'reqd': 1
+                }  
+            ],
+            function(values){
+                frappe.call({
+                    'method': 'stanztech.stanztech.page.production_control.production_control.set_task_progress',
+                    'args': {
+                        'task': task,
+                        'progress': values.progress
+                    },
+                    'callback': function(r) {
+                        frappe.production_control.get_project(project);
+                    }
+                });
+            },
+            __('Progress'),
+            __('Set')
+        );
     },
     end_work: function(page) {
         var employee = document.getElementById("employee").value;

@@ -6,6 +6,7 @@
 from __future__ import unicode_literals
 import frappe
 from frappe import throw, _
+from frappe.utils import cint
 import hashlib
 from datetime import datetime, timedelta, date
 from stanztech.stanztech.utils import set_work_order_in_process
@@ -21,7 +22,7 @@ def get_project(project):
     # add tasks
     tasks = frappe.get_all("Task", 
         filters=[['status', '!=', 'Closed'], ['project', '=', project]],
-        fields=['name', 'subject']
+        fields=['name', 'subject', 'progress']
     )
     project_data['tasks'] = tasks
     return project_data
@@ -179,3 +180,17 @@ def close_project_time(employee, submit=0):
         frappe.db.commit()
     return timesheet
             
+"""
+This will update a task progress value
+"""
+@frappe.whitelist()
+def set_task_progress(task, progress):
+    if type(progress) != int:
+        progress = cint(progress)
+        
+    task_doc = frappe.get_doc("Task", task)
+    task_doc.progress = progress if progress <= 100 else 100
+    task_doc.save()
+    frappe.db.commit()
+    return
+    
